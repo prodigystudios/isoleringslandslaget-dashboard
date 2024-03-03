@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { FIREBASE_AUTH } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import Home from "./Home";
 import User from "./Users";
 import LoginAuth from "./LoginAuth";
-import { onAuthStateChanged } from "firebase/auth";
+import News from "./News";
 
 export default function Page() {
   const [activeComponent, setActiveComponent] = useState("home");
@@ -25,20 +26,18 @@ export default function Page() {
   const renderComponent = () => {
     switch (activeComponent) {
       case "home":
-        return <Home user={authUser}/>;
-      case "about":
+        return <Home user={authUser} />;
+      case "user":
         return <User />;
-      case "contact":
-        return <Contact />;
+      case "news":
+        return <News user={authUser}/>;
       default:
         return null;
     }
   };
 
   if (!isLoggedIn) {
-    return (
-      <LoginAuth setIsLoggedIn={setIsLoggedIn}/>
-    );
+    return <LoginAuth setIsLoggedIn={setIsLoggedIn} />;
   }
 
   return (
@@ -68,7 +67,7 @@ export default function Page() {
             </button>
 
             <button
-              onClick={() => setActiveComponent("about")}
+              onClick={() => setActiveComponent("user")}
               href="#"
               class="p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:hover:bg-gray-800 hover:bg-gray-100"
             >
@@ -87,6 +86,27 @@ export default function Page() {
                 />
               </svg>
             </button>
+
+            <button
+              onClick={() => setActiveComponent("news")}
+              href="#"
+              class="p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:hover:bg-gray-800 hover:bg-gray-100"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#ffffff"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V8l-6-6z" />
+                <path d="M14 3v5h5M16 13H8M16 17H8M10 9H8" />
+              </svg>
+            </button>
           </nav>
 
           <div class="flex flex-col space-y-6">
@@ -98,7 +118,7 @@ export default function Page() {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke-width="1.5"
+                stroke-width="1.0"
                 stroke="currentColor"
                 class="w-6 h-6"
               >

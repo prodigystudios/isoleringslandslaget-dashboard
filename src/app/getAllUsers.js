@@ -89,7 +89,7 @@ const UserTable = (props) => {
                   onClick={() => ActiveAccount(user.id)}
                   className="border px-4 py-4 rounded-md bg-lime-400 hover:bg-lime-500"
                 >
-                  Activt
+                  Aktiv
                 </button>
               ) : (
                 <button
