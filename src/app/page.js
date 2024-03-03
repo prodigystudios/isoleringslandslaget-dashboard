@@ -1,15 +1,31 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { FIREBASE_AUTH } from "./firebase";
 import Home from "./Home";
 import User from "./Users";
+import LoginAuth from "./LoginAuth";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function Page() {
   const [activeComponent, setActiveComponent] = useState("home");
+  const [authUser, setAuthUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const auth = FIREBASE_AUTH;
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setAuthUser(user);
+      } else {
+        setAuthUser(null);
+      }
+    });
+    return unsubscribe;
+  }, [isLoggedIn]);
 
   const renderComponent = () => {
     switch (activeComponent) {
       case "home":
-        return <Home />;
+        return <Home user={authUser}/>;
       case "about":
         return <User />;
       case "contact":
@@ -19,8 +35,14 @@ export default function Page() {
     }
   };
 
+  if (!isLoggedIn) {
+    return (
+      <LoginAuth setIsLoggedIn={setIsLoggedIn}/>
+    );
+  }
+
   return (
-    <main>
+    <main className="scroll-smooth">
       <div className="fixed h-screen">
         <aside class="flex flex-col items-center w-16 h-screen py-8 overflow-y-auto bg-white border-r rtl:border-l rtl:border-r-0 dark:bg-gray-900 dark:border-gray-700">
           <nav class="flex flex-col flex-1 space-y-6">
